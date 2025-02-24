@@ -1,0 +1,29 @@
+<%- include('partials/_header.ejs') %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-5 offset-md-3">
+            <div class="card">
+                <h2 class="card-header text-center">Editar Software</h2>
+                <div class="card-body">
+                    <!-- Formulario para editar un software -->
+                    <form action="/software/edit/<%= software._id %>" method="post">
+                        <div class="form-group">
+                            <label for="link">Editar link:</label>
+                            <input type="link" class="form-control" name="link" placeholder="link" value="<%= software.link%>">
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcion">Editar descripción:</label>
+                            <input type="text" class="form-control" name="descripcion" placeholder="descripcion" value="<%= software.descripcion%>">
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+  
+<%- include('partials/_footer.ejs') %>

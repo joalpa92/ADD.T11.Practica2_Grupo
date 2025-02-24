@@ -1,0 +1,157 @@
+<%- include('partials/_header.ejs') %> <!-- Incluye el header para mantener la coherencia de la página -->
+
+<div class="container mt-4">
+    <div class="row">
+        <% if (user.rol === "Administrador") { %> <!-- Verifica si el usuario tiene rol de administrador -->
+        
+        <!-- Sección para agregar asignatura -->
+        <div class="col-md-5">
+            <div class="card shadow-lg border-primary"> <!-- Tarjeta con sombra y borde azul -->
+                <div class="card-header bg-primary text-white"> <!-- Encabezado azul con texto blanco -->
+                    <h5 class="mb-0">Añadir Nueva Asignatura</h5>
+                </div>
+                <div class="card-body">
+                    <form action="/asignatura/add" method="post"> <!-- Formulario para añadir una nueva asignatura -->
+                        
+                        <!-- Campo para ingresar el nombre de la asignatura -->
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+
+                        <!-- Campo para ingresar el curso al que pertenece la asignatura -->
+                        <div class="mb-3">
+                            <label for="curso" class="form-label">Curso:</label>
+                            <input type="text" class="form-control" id="curso" name="curso" required>
+                        </div>
+
+                        <!-- Selección de Alumnos -->
+                        <div class="mb-3">
+                            <label for="alumnos" class="form-label">Alumnos:</label>
+                            <select class="form-select" id="alumnos" name="alumnos" multiple> <!-- Permite selección múltiple -->
+                                <% alumnos.forEach(alumno => { %>
+                                <option value="<%= alumno._id %>"><%= alumno.nombre %> <%= alumno.apellido %></option>
+                                <% }) %>
+                            </select>
+                            <small class="text-muted">Selecciona múltiples alumnos (Ctrl + Click)</small>
+                        </div>
+
+                        <!-- Selección de Profesores -->
+                        <div class="mb-3">
+                            <label for="profesores" class="form-label">Profesores:</label>
+                            <select class="form-select" id="profesores" name="profesores" multiple> <!-- Permite selección múltiple -->
+                                <% profesores.forEach(profesor => { %>
+                                <option value="<%= profesor._id %>"><%= profesor.nombre %> <%= profesor.apellido %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+
+                        <!-- Selección de Estudio -->
+                        <div class="mb-3">
+                            <label for="estudio" class="form-label">Estudio:</label>
+                            <select class="form-select" id="estudio" name="estudio" required>
+                                <% estudios.forEach(estudio => { %>
+                                <option value="<%= estudio._id %>"><%= estudio.nombre %> (<%= estudio.tipo %>)</option>
+                                <% }) %>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100"> <!-- Botón de envío en verde -->
+                            <i class="fas fa-plus-circle"></i> Añadir Asignatura
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <% } %> <!-- Fin del bloque de administrador -->
+
+        <!-- Sección derecha: Listado de asignaturas en tarjetas -->
+        <div class="col-md-7">
+            <h2 class="text-center mb-3">Listado de Asignaturas</h2>
+            <div class="row">
+                <% if (asignaturas && asignaturas.length > 0) { %> <!-- Verifica si hay asignaturas -->
+                    <% for (var i = 0; i < asignaturas.length; i++) { %>
+                        <div class="col-md-12 mb-3">
+                            <div class="card shadow-lg border-secondary"> <!-- Tarjeta con sombra y borde gris -->
+                                
+                                <!-- Encabezado con enlace a la lista de software de la asignatura -->
+                                <div class="card-header bg-secondary text-dark">
+                                    <strong>
+                                        <a href="/software/<%= asignaturas[i]._id %>" class="text-dark text-decoration-none">
+                                            Asignatura <%= i + 1 %>: <%= asignaturas[i].nombre %>
+                                        </a>
+                                    </strong>
+                                </div>
+
+                                <!-- Lista de información de la asignatura -->
+                                <ul class="list-group list-group-flush">
+                                    
+                                    <!-- Curso -->
+                                    <li class="list-group-item">
+                                        <strong>Curso:</strong> <%= asignaturas[i].curso %>
+                                    </li>
+
+                                    <!-- Profesores -->
+                                    <li class="list-group-item">
+                                        <strong>Profesores:</strong> 
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <% profesores.forEach(profesor => { %>
+                                                <% if (asignaturas[i].profesores.includes(profesor._id.toString())) { %>
+                                                    <span class="badge bg-primary px-2 py-1"><%= profesor.nombre %></span>
+                                                <% } %>
+                                            <% }) %>
+                                        </div>
+                                    </li>
+
+                                    <!-- Alumnos -->
+                                    <li class="list-group-item">
+                                        <strong>Alumnos:</strong> 
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <% alumnos.forEach(alumno => { %>
+                                                <% if (asignaturas[i].alumnos.includes(alumno._id.toString())) { %>
+                                                    <span class="badge bg-info px-2 py-1"><%= alumno.nombre %></span>
+                                                <% } %>
+                                            <% }) %>
+                                        </div>
+                                    </li>
+
+                                    <!-- Estudio -->
+                                    <li class="list-group-item">
+                                        <strong>Estudio:</strong> 
+                                        <% estudios.forEach(estudio => { %>
+                                            <% if (asignaturas[i].estudio.toString() === estudio._id.toString()) { %>
+                                                <span class="badge bg-warning px-2 py-1"><%= estudio.nombre %> (<%= estudio.tipo %>)</span>
+                                            <% } %>
+                                        <% }) %>
+                                    </li>
+
+                                    <!-- Botones de acciones (Eliminar y Editar) -->
+                                    <li class="list-group-item text-center">
+                                        <% if (user.rol === "Administrador" || user.rol === "Profesor") { %>
+                                            <a href="/asignaturas/delete/<%= asignaturas[i]._id %>" class="btn btn-danger btn-sm px-3">
+                                                <i class="fas fa-trash-alt"></i> Eliminar
+                                            </a>
+                                            <a href="/asignaturas/editAsignatura/<%= asignaturas[i]._id %>" class="btn btn-info btn-sm px-3">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </a>
+                                        <% } %>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } else { %>
+                    <!-- Si no hay asignaturas, muestra un mensaje -->
+                    <div class="col-md-12">
+                        <div class="alert alert-warning text-center">
+                            No hay asignaturas disponibles.
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<%- include('partials/_footer.ejs') %> <!-- Incluye el footer para mantener la coherencia de la página -->

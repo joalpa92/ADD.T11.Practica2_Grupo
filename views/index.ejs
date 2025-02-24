@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula Virtual</title>
+    <link rel="stylesheet" href="/public/stylesheets/style.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <%- include('partials/_header.ejs') %>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Bienvenido al Aula Virtual</h1>
+            <p>Gestiona tus asignaturas y recursos de manera eficiente.</p>
+            <a href="/signin" class="btn">Accede Ahora</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Sección de Información -->
+        <section class="features">
+            <div class="container">
+                <div class="feature">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <h3>Para Profesores</h3>
+                    <p>Organiza tus clases, asigna tareas y mantén el control de los alumnos.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-user-graduate"></i>
+                    <h3>Para Estudiantes</h3>
+                    <p>Accede a tus materiales de estudio y recibe notificaciones en tiempo real.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-users-cog"></i>
+                    <h3>Para Administradores</h3>
+                    <p>Gestiona usuarios, asignaturas y supervisa el progreso del aula virtual.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Llamada a la Acción -->
+        <section class="cta">
+            <h2>Únete a nuestra comunidad</h2>
+            <p>Forma parte del aula virtual y accede a herramientas para una mejor educación.</p>
+            <a href="/signup" class="btn">Crear Cuenta</a>
+        </section>
+    </main>
+
+    <%- include('partials/_footer.ejs') %>
+</body>
+</html>
+

@@ -1,0 +1,76 @@
+<%- include('partials/_header.ejs') %>
+
+<!--Parte derecha: Formulario para añadir un usuario
+    Parte izquierda: Listado de usuarios-->
+    <div class="container">
+      <div class="row">
+          <div class="col-md-6">
+              <!-- Formulario para añadir un usuario -->
+              <div class="card">
+                  <div class="card-header">
+                      <h2>Añadir Usuario</h2>
+                  </div>
+                  <div class="card-body">
+                      <form action="/usuario/add" method="post">
+                          <div class="form-group">
+                              <label for="nombre">Nombre:</label>
+                              <input type="text" class="form-control" id="nombre" name="nombre" placeholder-glow="Nombre" required>
+                          </div>
+                          <div class="form-group">
+                              <label for="apellido">Apellido:</label>
+                              <input type="text" class="form-control" id="apellido" name="apellido" placeholder-glow="Apellido" required>
+                          </div>
+                          <div class="form-group">
+                              <label for="email">Correo Electrónico:</label>
+                              <input type="email" class="form-control" id="email" name="email" placeholder-glow="Email" required>
+                          </div>
+                          <div class="form-group">
+                              <label for="password">Contraseña:</label>
+                              <input type="password" class="form-control" id="password" name="password" placeholder-glow="Password" required>
+                          </div>
+                          <div class="form-group">
+                              <label for="rol">Selecciona un rol:</label>
+                              <select class="form-control" id="rol" name="rol">
+                                  <option value="Administrador">Administrador</option>
+                                  <option value="Profesor">Profesor</option>
+                                  <option value="Alumno">Alumno</option>
+                              </select>
+                          </div>
+                          <button type="submit" class="btn btn-primary mt-3">Añadir</button>
+                      </form>
+                  </div>
+              </div>
+          </div>
+  
+          <div class="col-md-6">
+              <!-- Listado de usuarios en tarjetas -->
+              <h2>Listado de Usuarios</h2>
+              <div class="row">
+                  <% for(var i=0; i < usuarios.length; i++) { %>
+                      <div class="col-md-12 mb-3">
+                          <div class="card shadow-sm ">
+                              <div class="card-header bg-dark text-white">
+                                  <strong><%= usuarios[i].nombre %> <%= usuarios[i].apellidos %></strong>
+                              </div>
+                              <ul class="list-group list-group-flush">
+                                  <li class="list-group-item"><strong>Email:</strong> <%= usuarios[i].email %></li>
+                                  <li class="list-group-item"><strong>Rol:</strong> <%= usuarios[i].rol %></li>
+                                  <li class="list-group-item text-center">
+                                      <a href="/usuarios/delete/<%= usuarios[i]._id %>" class="btn btn-danger btn-sm">
+                                          Eliminar
+                                      </a>
+                                      <a href="/usuarios/editUsuarios/<%= usuarios[i]._id %>" class="btn btn-info btn-sm">
+                                          Editar
+                                      </a>
+                                  </li>
+                              </ul>
+                          </div>
+                      </div>
+                  <% } %>
+              </div>
+          </div>
+      </div>
+  </div>
+
+<%- include('partials/_footer.ejs') %>
+

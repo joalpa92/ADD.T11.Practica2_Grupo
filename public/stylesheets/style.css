@@ -1,0 +1,104 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f4f4;
+}
+
+
+.hero {
+  background: url('/img/hero-bg.jpg') center/cover no-repeat;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  position: relative;
+}
+
+.hero-content {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+}
+
+.hero p {
+  font-size: 1.2rem;
+}
+
+.btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: #ffcc00;
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.btn:hover {
+  background: #e6b800;
+}
+
+/* Sección de Características */
+.features {
+  background: white;
+  padding: 50px 0;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.feature {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 280px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.feature:hover {
+  transform: translateY(-5px);
+}
+
+.feature i {
+  font-size: 2rem;
+  color: #ffcc00;
+}
+
+/* Sección de Llamada a la Acción */
+.cta {
+  background: linear-gradient(90deg, #1e3c72, #2a5298);
+  color: white;
+  text-align: center;
+  padding: 40px;
+}
+
+.cta h2 {
+  font-size: 2rem;
+}
+
+.cta p {
+  font-size: 1.2rem;
+}

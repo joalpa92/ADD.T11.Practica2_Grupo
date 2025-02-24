@@ -1,0 +1,1 @@
+//De momento, no se muestra nada de los estudios, sólo se carga en la viata dw asignatura

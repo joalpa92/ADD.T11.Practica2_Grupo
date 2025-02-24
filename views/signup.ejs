@@ -1,0 +1,31 @@
+<%- include('partials/_header.ejs') %>
+<div class="col-md-5">
+  <div class="card">
+    <div class="card-header">
+      <h2>Registro</h2>
+    </div>
+    <div class="card-body">
+      <form action="/signup" method="POST">
+        <input type="email" name="email" placeholder="Email">
+        <input type="password" name="password" placeholder="Password">
+        <input type="text" name="nombre" placeholder="nombre">
+        <input type="text" name="apellido" placeholder="apellidos">
+      
+        <label for="rol">Selecciona un rol:</label>
+        <select id="rol" name="rol">
+            <option value="Administrador">Administrador</option>
+            <option value="Profesor">Profesor</option>
+            <option value="Alumno">Alumno</option>
+        </select>
+        <button class="btn btn-primary" type="submit">
+          SignUp
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%if (signupMessage) {%>
+  <p style="color:#FF0000;"><%= signupMessage %></p>
+<% } %>
+<%- include('partials/_footer.ejs') %>

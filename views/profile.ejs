@@ -1,0 +1,42 @@
+<%- include('partials/_header.ejs') %>
+
+<div class="col-md-7 mx-auto">
+    <% if (user.rol == 0) { %>
+        <!-- Si el rol del usuario es 0, muestra el siguiente contenido -->
+        <p>Contenido específico para el rol 0</p>
+    <% } else { %>
+        <!-- Si el rol del usuario no es 0, muestra la tabla con la información del usuario -->
+        <table class="table table-striped table-bordered border-dark table table-hover">
+            <thead>
+                <tr>
+                    <th class="mx-auto text-center" colspan="2">Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                  <th>ID</th>
+                  <td><%= user._id%></td>
+                </tr>
+                <tr>
+                    <th>Nombre</th>
+                    <td><%= user.nombre%> <%= user.apellido%></td>
+                  </tr>
+                <tr>
+                  <th>Email</th>
+                  <td><%= user.email%></td>
+                </tr>
+                <tr>
+                    <th>Rol</th>
+                    <td><%= user.rol%></td>
+                  </tr>
+                  <tr>
+                <tr>
+                  <th>Password</th>
+                  <td><%= user.password%></td>
+                </tr>
+            </tbody>
+        </table>
+    <% } %>
+</div>
+
+<%- include('partials/_footer.ejs') %>
