@@ -1,7 +1,9 @@
 const router = require('express').Router();//importamos el modulo de express para definir las rutas
 const passport = require('passport');//importamos el modulo de passport para la autenticacion
 const Usuario = require('../models/usuario');//importamos el modelo de usuario
-
+const fs = require('fs');
+const csv = require('csv-parser');
+const results = [];
 
 //definimos la ruta de inicio
 router.get('/', (req, res, next) => {
@@ -71,6 +73,13 @@ router.post('/usuario/add', async (req, res) => {
       apellido,
     });
 
+    //verificamos si se sube un archivo
+    if (req.files && req.files.archivo){
+        let EDFile = req.files.archivo;
+        usuario.archivo = EDFile.name;//fuardamos el nombre del archivo de la asignatura
+        await EDFile.mv(`./files/${EDFile.name}`);//y la movemos a la carpeta files
+    }
+
     // Guardar usuario
     await newUser.insert();
 
@@ -82,6 +91,52 @@ router.post('/usuario/add', async (req, res) => {
     return res.status(500).send('Error en el servidor');
   }
 });
+
+//ruta para subir tareas desde CSV
+router.post('/addUsuariosCSV', isAuthenticated, async (req,res) => {
+  try{
+      if(!req.files || !req.files.archivo){//Verificamos si hay un archivo subido
+          return res.status(400).send('No se ha podido subir el archivo');
+      }
+
+      const fileUsuario = req.files.archivo;
+      const filePath = `./files/usuarios${fileUsuario.name}`;
+
+      await fileUsuario.mv(filePath);//guarda el archivo en el server
+      await readCSVFile(filePath, req.user._id);//procesa el archivo CSV para extraer las asignaturas
+      res.redirect('/usuarios');
+  } catch(error){
+      console.error('error al subir el archivo CSV:', error);
+      res.status(500).send('Error al subir el archivo CSV');
+  }
+});
+
+//Funcion para leer un archivo CSV y procesarlo
+const readCSVFile = async (fileName, user) =>{
+    try{
+        const results= [];
+        fs.createReadStream(fileName)//Esto lee el archivo CSV
+        .pipe(csv({separator: ','}))//separamos los datos por comas
+        .on('data', (data) => results.push(data))//fguardamos los datos en el arraylist results
+        .on('end', async () =>{
+            for(const UsuarioData of results){//recorremos los datos del CSV
+               const nuevoUsuario = new Usuario({
+                nombre : UsuarioData.nombre,
+                email: UsuarioData.email,
+                password: UsuarioData.password,
+                apellido: UsuarioData.apellido,
+                rol : UsuarioData.rol,
+                usuario : user
+               });
+               await nuevoUsuario.save();
+            }
+            console.log('CSV procesado Gucci');
+        });
+    }catch(error){
+        console.error('Error al procesar el CSV:', error)
+    }
+};
+
 
 //para obtener datos en la ventana editar usuarios por id
 router.get('/usuarios/editUsuarios/:id', isAuthenticated, async function (req, res, next) {

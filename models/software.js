@@ -3,8 +3,8 @@ const { Schema } = mongoose;
 
 // Definición del esquema de software
 const SoftwareSchema = new Schema({
-    link: { type: String, required: true }, // Definimos el campo 'link' como obligatorio en el esquema
-    descripcion: { type: String, required: true }, // Definimos el campo 'descripcion' como obligatorio
+    link: { type: String }, // Definimos el campo 'link' como obligatorio en el esquema
+    descripcion: { type: String }, // Definimos el campo 'descripcion' como obligatorio
     asignatura: { type: mongoose.Schema.Types.ObjectId, ref: 'asignatura' } // Relación con la colección 'asignatura'
 });
 
