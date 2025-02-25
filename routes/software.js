@@ -1,8 +1,22 @@
-
 const express = require('express');
 const router = express.Router();
 const Asignatura = require('../models/asignatura');
 const Software = require('../models/software');
+const nodemailer = require('nodemailer'); //nodemailer
+const fs = require('fs'); //fileSystem
+const csv = require('csv-parser'); //encargado de parsear
+const result = [];
+
+//El transporter
+let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth:{
+        user: 'app.p2.add@gmail.com',
+        pass: 'xktw fenm lhrk soha'
+    }
+});
 
 
 //Obtener software
@@ -18,11 +32,10 @@ router.get('/software/:id', async (req, res) => {
     res.render('software', { softwares, asignatura }); // Pasamos 'asignaturas' al renderizado para consistencia
 });
 
-// Para añadir software sin usar el signup
+// Para añadir software 
 router.post('/software/add', async (req, res) => {
     try {
-        //let asignatura = req.params.id;//No se lo estamos pasando por ruta, sino por el body
-        const { link, descripcion,asignaturaId } = req.body;
+        const { link, descripcion,asignaturaId } = req.body; //let asignatura = req.params.id;//No se lo estamos pasando por ruta, sino por el body
 
         // Crear nuevo software
         const newSoftware = new Software({
@@ -31,11 +44,32 @@ router.post('/software/add', async (req, res) => {
             asignatura: asignaturaId // Guardamos el ID de la asignatura, en el campo 'asignatura' de softwareSchema
         });
 
-        // Guardar software
-        await newSoftware.insert();
+        await newSoftware.insert(); // Guardar software
+
+        //Cada vez que haya un cambio en una asignatura, los alumnos de la asignatura reciben una notificación 
+        const asignatura = await Asignatura.findById(asignaturaId).populate('alumnos', 'email'); //buscar asignatura x email y con populate() obtenemos esos datos en vez de unicamente el ObjectId de cada uno
+
+        //Obtener los emails de los alumnos en un array
+        let emails = [];
+        for (let i = 0; i < asignatura.alumnos.length; i++) {
+            if (asignatura.alumnos[i].email) { 
+                emails.push(asignatura.alumnos[i].email); //push añade el email al array
+            }
+        }
+        console.log('alumnos emails de esta asignatura: ', emails.toString());
+
+        let mensaje = `Se ha añadido un software en la asignatura ${asignatura.nombre}`;
+        let mailOptions = {
+            from: 'app.p2.add@gmail.com',
+            to: emails.join(','),  
+            subject: 'Asignatura editada ' + asignatura.nombre,
+            text: mensaje
+        };
+        await transporter.sendMail(mailOptions)
+        .then(result => console.log(result))
+        .catch(error => console.log(error));
 
         console.log('Contenido agregado con éxito:', newSoftware);
-
         return res.redirect('/software/' + asignaturaId);
     } catch (error) {
         console.error('Error al agregar contenido:', error);
@@ -59,6 +93,27 @@ router.get('/software/delete/:id', async (req, res, next) => {
 
         // Eliminar el software
         await Software.findByIdAndDelete(id);
+
+        //Cada vez que haya un cambio en una asignatura, los alumnos de la asignatura reciben una notificación 
+        const asignatura = await Asignatura.findById(asignaturaId).populate('alumnos', 'email'); //buscar asignatura x email y con populate() obtenemos esos datos en vez de unicamente el ObjectId de cada uno
+        //Obtener los emails de los alumnos en un array
+        let emails = [];
+        for (let i = 0; i < asignatura.alumnos.length; i++) {
+            if (asignatura.alumnos[i].email) { 
+                emails.push(asignatura.alumnos[i].email); //push añade el email al array
+            }
+        }
+        console.log('alumnos emails de esta asignatura: ', emails.toString());
+        let mensaje = `Se ha eliminado un software en la asignatura ${asignatura.nombre}`;
+        let mailOptions = {
+            from: 'app.p2.add@gmail.com',
+            to: emails.join(','),  
+            subject: 'Asignatura editada ' + asignatura.nombre,
+            text: mensaje
+        };
+        await transporter.sendMail(mailOptions)
+        .then(result => console.log(result))
+        .catch(error => console.log(error));
 
         // Redirigir a la vista de software de esa asignatura
         res.redirect('/software/' + asignaturaId);
@@ -86,7 +141,7 @@ router.post('/software/edit/:id', async function (req, res, next) {
         
         if (!software) {
             return res.status(404).send("Software no encontrado");
-        }
+        } 
         
         // Obtener el ID de la asignatura del software antes de la actualización
         const asignaturaId = software.asignatura;
@@ -96,6 +151,27 @@ router.post('/software/edit/:id', async function (req, res, next) {
         // Actualizar el software con los datos proporcionados en req.body
         await Software.updateOne({ _id: id }, req.body);
 
+        //Cada vez que haya un cambio en una asignatura, los alumnos de la asignatura reciben una notificación 
+        const asignatura = await Asignatura.findById(asignaturaId).populate('alumnos', 'email'); //buscar asignatura x email y con populate() obtenemos esos datos en vez de unicamente el ObjectId de cada uno
+        //Obtener los emails de los alumnos en un array
+        let emails = [];
+        for (let i = 0; i < asignatura.alumnos.length; i++) {
+            if (asignatura.alumnos[i].email) { 
+                emails.push(asignatura.alumnos[i].email); //push añade el email al array
+            }
+        }
+        console.log('alumnos emails de esta asignatura: ', emails.toString());
+        let mensaje = `Se ha editado un software en la asignatura ${asignatura.nombre}`;
+        let mailOptions = {
+            from: 'app.p2.add@gmail.com',
+            to: emails.join(','),  
+            subject: 'Asignatura editada ' + asignatura.nombre,
+            text: mensaje
+        };
+        await transporter.sendMail(mailOptions)
+        .then(result => console.log(result))
+        .catch(error => console.log(error));
+
         // Redirigir a la vista de la asignatura correspondiente
         res.redirect('/software/' + asignaturaId);
     } catch (error) {
@@ -103,7 +179,6 @@ router.post('/software/edit/:id', async function (req, res, next) {
         next(error);
     }
 });
-
 
 
 module.exports = router;
