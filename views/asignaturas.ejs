@@ -151,6 +151,22 @@
             </div>
         </div>
 
+        <!--Sugerencias (sólo lo pueden ver los alumnos)-->
+        <!--Esto de ahora no se va usar pq voy a hacer otra vista -->
+        <% if (user.rol === "Alumno") { %>
+            <div class="col-md-5 mb-3 px-5">
+                <h2 class="text-center mb-3">Sugerencias</h2>
+
+                    <div class="card shadow-lg border-secondary"> <!-- Tarjeta con sombra y borde gris -->
+                        <input type="text" name="sugerencias" class="form-control py-5">
+                    </div>
+
+                    <li class="list-group-item text-center mt-3">
+                        <!--Cambiar la siguiente línea más adelante cuando tenga hecha la ruta-->
+                        <a href="/asignaturas/sugerencias>" class="btn btn-success btn-sm px-3">Enviar</a>    
+                    </li>
+            </div>
+        <% } %>
     </div>
 </div>
 

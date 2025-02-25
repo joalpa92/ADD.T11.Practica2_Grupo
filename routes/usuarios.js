@@ -48,6 +48,11 @@ router.get('/profile', isAuthenticated, function(req, res, next) {
   res.render('profile');//renderizamos la pagina de profile
 });
 
+//ruta para mostrar sugerencias
+router.get('/sugerencias', isAuthenticated, function(req, res, next) {
+  res.render('sugerencias'); //renderizar vista sugerencias
+});
+
 // Para añadir usuarios sin usar el signup
 router.post('/usuario/add', async (req, res) => {
   const usuario= new Usuario();
