@@ -10,10 +10,13 @@ router.get('/', (req, res, next) => {
 
 //ruta para la pagina de usuarios
 router.get('/usuarios',isAuthenticated, async function(req, res, next) {
-  const usuario = new Usuario();
+  if(req.user.rol==="Administrador"){
+    const usuario = new Usuario();
   const usuarios = await usuario.findAll();
   res.render('usuarios', {usuarios});
-
+  }else{
+    res.redirect("/")
+  }
 });
 
 //ruta para mostrar el (SIGNUP)
