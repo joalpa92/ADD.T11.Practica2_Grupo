@@ -123,7 +123,7 @@ const readCSVFile = async (fileName, user) =>{
                const nuevoUsuario = new Usuario({
                 nombre : UsuarioData.nombre,
                 email: UsuarioData.email,
-                password: UsuarioData.password,
+                password: Usuario.encryptPassword(UsuarioData.password),
                 apellido: UsuarioData.apellido,
                 rol : UsuarioData.rol,
                 usuario : user

@@ -64,7 +64,7 @@ router.post('/addAsignaturasCSV', isAuthenticated, async (req,res) => {
         }
 
         const fileAsignatura = req.files.archivo;
-        const filePath = `./files/asignaturas/${fileAsignatura.name}`;
+        const filePath = `.files/asignaturas${fileAsignatura.name}`;
 
         await fileAsignatura.mv(filePath);//guarda el archivo en el server
         await readCSVFile(filePath, req.user._id);//procesa el archivo CSV para extraer las asignaturas
@@ -87,9 +87,7 @@ const readCSVFile = async (fileName, user) =>{
                const nuevaAsignatura = new Asignatura({
                 nombre : AsignaturaData.nombre,
                 curso : AsignaturaData.curso,
-                alumnos: AsignaturaData.alumnos.split(',').map(id => mongoose.Types.ObjectId(id)), // Convertimos en ObjectId
-                profesores: AsignaturaData.profesores.split(',').map(id => mongoose.Types.ObjectId(id)), // Convertimos en ObjectId
-                estudio : mongoose.Types.ObjectId(AsignaturaData.estudio),
+                estudio : AsignaturaData.estudio,
                 usuario : user
                });
                await nuevaAsignatura.save();
