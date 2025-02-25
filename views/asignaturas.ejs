@@ -130,11 +130,14 @@
                                     <!-- Estudio -->
                                     <li class="list-group-item">
                                         <strong>Estudio:</strong> 
+                                        <% if (estudios.length!=0)%>
                                         <% estudios.forEach(estudio => { %>
+                                            
                                             <% if (asignaturas[i].estudio.toString() === estudio._id.toString()) { %>
                                                 <span class="badge bg-warning px-2 py-1"><%= estudio.nombre %> (<%= estudio.tipo %>)</span>
-                                            <% } %>
+                                            <% } %> 
                                         <% }) %>
+                                        <% } %>
                                     </li>
 
                                     <!-- Botones de acciones (Eliminar y Editar) -->
