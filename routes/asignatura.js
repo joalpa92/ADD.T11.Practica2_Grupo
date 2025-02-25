@@ -3,6 +3,18 @@ const router = express.Router();
 const Asignatura = require('../models/asignatura');
 const Usuario = require('../models/usuario'); // Modelo de usuarios
 const Estudio = require('../models/estudio'); // Modelo de estudios
+const nodemailer = require('nodemailer'); //nuevo
+
+//El transporter
+let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth:{
+        user: 'app.p2.add@gmail.com',
+        pass: 'xktw fenm lhrk soha'
+    }
+});
 
 //Obtener asignaturas
 router.get('/asignaturas',isAuthenticated, async (req, res) => {
@@ -40,7 +52,7 @@ router.post('/asignatura/add', async (req, res) => {
     }
 });
 
-//Ruta para eliminar un usuario por su id
+//Ruta para eliminar una asignatura por su id
 router.get('/asignaturas/delete/:id', isAuthenticated, async (req, res, next) =>{
   const asignatura = new Asignatura();
   let {id} = req.params;
@@ -62,11 +74,35 @@ router.get('/asignaturas/editAsignatura/:id', isAuthenticated, async (req,res,ne
     res.render('editAsignatura', {asignatura, usuarios, profesores, alumnos, estudios});
 
 });
+
 //post para editAsignatura
 router.post('/asignaturas/editAsignatura/:id', isAuthenticated, async (req,res,next) =>{
     const asignatura = new Asignatura();
     const {id} = req.params;
     await asignatura.update({_id:id} ,req.body );
+
+    //Cada vez que haya un cambio en una asignatura, los alumnos de la asignatura reciben una notificación 
+    const asignaturaActualizada = await Asignatura.findById(id).populate('alumnos');
+    //Obtener los emails de los alumnos en un array
+    let emails = [];
+    for (let i = 0; i < asignaturaActualizada.alumnos.length; i++) {
+        if (asignaturaActualizada.alumnos[i].email) { 
+            emails.push(asignaturaActualizada.alumnos[i].email); //push añade el email al array
+        }
+    }
+    console.log('alumnos emails de esta asignatura: ', emails.toString());
+    let mensaje = `Ha habido un cambio en la asignatura ${asignaturaActualizada.nombre}`;
+    let mailOptions = {
+        from: 'app.p2.add@gmail.com',
+        to: emails.join(','),  
+        subject: 'Asignatura editada ' + asignaturaActualizada.nombre,
+        text: mensaje
+    };
+    await transporter.sendMail(mailOptions)
+    .then(result => console.log(result))
+    .catch(error => console.log(error));
+
+
     res.redirect('/asignaturas')
 
 })
