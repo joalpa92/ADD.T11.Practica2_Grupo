@@ -13,8 +13,8 @@
                         <h4 class="mb-0">Añadir Software</h4>
                     </div>
                     <div class="card-body">
-                        <form action="/software/add" method="post">
-                            <!-- Campo oculto para enviar el ID de la asignatura -->
+                        <form action="/software/add" method="post" enctype="multipart/form-data">
+                            <!-- Campo oculto para enviar el ID de la asignatura a través del body-->
                             <input type="hidden" name="asignaturaId" value="<%= asignatura._id %>">
 
                             <!-- Campo para el link del software -->
@@ -27,6 +27,12 @@
                             <div class="form-group">
                                 <label for="descripcion">Descripción:</label>
                                 <input type="text" class="form-control" id="descripcion" name="descripcion" required placeholder="Breve descripción">
+                            </div>
+
+                            <!-- Campo para subir archivo al software -->
+                            <div class="form-group">
+                                <label for="archivo">Upload File</label>
+                                <input id="archivo" class="form-control-file" type="file" name="archivo">
                             </div>
 
                             <!-- Botón para enviar el formulario -->
@@ -57,7 +63,17 @@
                                         </a>
                                     </li>
                                     <li class="list-group-item">
-                                        <strong>Descripción:</strong> <%= softwares[i].descripcion %>
+                                        <strong>Descripción: </strong> <%= softwares[i].descripcion %>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Archivo: </strong>
+                                        <% if (softwares[i].archivo) { %>
+                                            <a href="../files/<%= softwares[i].archivo %>" download="<%= softwares[i].archivo %>"> <!--Añado el doble punto para salirme a la raiz del proyecto-->
+                                              <%= softwares[i].archivo %>
+                                            </a>
+                                          <% } else { %>
+                                            <em>No file</em>
+                                          <% } %>
                                     </li>
                                     <% if (user.rol == "Administrador" || user.rol == "Profesor") { %>
                                         <li class="list-group-item text-center">

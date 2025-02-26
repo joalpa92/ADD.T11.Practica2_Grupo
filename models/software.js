@@ -5,7 +5,8 @@ const { Schema } = mongoose;
 const SoftwareSchema = new Schema({
     link: { type: String, required: true }, // Definimos el campo 'link' como obligatorio en el esquema
     descripcion: { type: String, required: true }, // Definimos el campo 'descripcion' como obligatorio
-    asignatura: { type: mongoose.Schema.Types.ObjectId, ref: 'asignatura' } // Relación con la colección 'asignatura'
+    asignatura: { type: mongoose.Schema.Types.ObjectId, ref: 'asignatura' }, // Relación con la colección 'asignatura'
+    archivo: {type: String, required: false}, //Añadido para subir archivos a software
 });
 
 // Método para insertar un nuevo documento en la colección 'software'

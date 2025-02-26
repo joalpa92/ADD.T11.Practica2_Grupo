@@ -6,7 +6,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
 const logger = require('morgan');
-
+const fileUpload = require ('express-fileupload'); //Importada para subir archivos
 
 
 var app = express();
@@ -28,8 +28,14 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+
 //app.use(express.static(path.join(__dirname, 'public')));
 app.use("/public", express.static(path.resolve(__dirname + '/public')));
+app.use("/files", express.static(path.join(__dirname, "files")));
+//app.use('/files', express.static('files'));
+
+
 app.use(session({
   secret: 'mysecretsession',
   resave: false,
@@ -38,6 +44,8 @@ app.use(session({
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(fileUpload());
+
 // middlewares
 
 
@@ -74,4 +82,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+module.exports = app; 
