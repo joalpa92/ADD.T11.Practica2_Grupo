@@ -10,12 +10,12 @@ router.get('/', (req, res, next) => {
 
 //ruta para la pagina de usuarios
 router.get('/usuarios',isAuthenticated, async function(req, res, next) {
-  if(req.user.rol==="Administrador"){
+  if(req.user.rol==="Administrador"){//cotenido añadido condicional para evitar entradas indeseadas
     const usuario = new Usuario();
   const usuarios = await usuario.findAll();
   res.render('usuarios', {usuarios});
   }else{
-    res.redirect("/")
+    res.redirect('/')
   }
 });
 
@@ -88,26 +88,38 @@ router.post('/usuario/add', async (req, res) => {
 
 //para obtener datos en la ventana editar usuarios por id
 router.get('/usuarios/editUsuarios/:id', isAuthenticated, async function (req, res, next) {
-  var usuario = new Usuario();
-  usuario = await usuario.findById(req.params.id);
-  res.render('editUsuarios', {usuario});
+  if(req.user.rol==="Administrador"){//cotenido añadido condicional para evitar entradas indeseadas
+    var usuario = new Usuario();
+    usuario = await usuario.findById(req.params.id);
+    res.render('editUsuarios', {usuario});
+  }else{
+    res.redirect('/')
+  }
 });
 
 // Actualizar usuariocon los datos del formulario en ventana editUsuario 
 router.post('/usuarios/editUsuarios/:id', isAuthenticated,async function(req, res, next) {
-  const usuario = new Usuario();
-  const {id} = req.params;
-  await usuario.update({_id : id}, req.body);
-  res.redirect('/usuarios');
+  if(req.user.rol==="Administrador"){//cotenido añadido condicional para evitar entradas indeseadas
+    const usuario = new Usuario();
+    const {id} = req.params;
+    await usuario.update({_id : id}, req.body);
+    res.redirect('/usuarios');
+  }else{
+    res.redirect('/')
+  }
 });
 
 
 //para eliminar usuarios por id
 router.get('/usuarios/delete/:id', isAuthenticated, async function(req, res, next) {
-  const usuario = new Usuario();
-  let {id} = req.params;
-  await usuario.delete(id);
-  res.redirect('/usuarios');
+  if(req.user.rol==="Administrador"){//cotenido añadido condicional para evitar entradas indeseadas
+    const usuario = new Usuario();
+    let {id} = req.params;
+    await usuario.delete(id);
+    res.redirect('/usuarios');
+  }else{
+    res.redirect('/')
+  }
 });
 
 
