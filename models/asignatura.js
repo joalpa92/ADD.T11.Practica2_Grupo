@@ -11,11 +11,11 @@ const asignaturaSchema = new Schema ({
     //alumnos y profesores son listas. Referencian a usuario y almacenan su _Id
     alumnos:
     [
-        {type: mongoose.Schema.Types.ObjectId, ref:'usuario'}
+        {type: mongoose.Schema.Types.ObjectId, ref:'usuario'}//hace referencia a la colección usuario
     ],
     software:
     [
-      {type: mongoose.Schema.Types.ObjectId, ref:'software'}
+      {type: mongoose.Schema.Types.ObjectId, ref:'software'}//hace referencia a la colección software
     ],
     archivo:{
       type: String
