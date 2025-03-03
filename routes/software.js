@@ -7,44 +7,45 @@ const Usuario = require('../models/usuario')
 
 async function verificarAcceso(req, res, next) {
     try {
-        const asignaturaId = req.params._id;
-        const usuarioId = req.user._id;
+        const asignaturaId = req.params._id;  // ID de la asignatura desde la URL
+        const usuarioId = req.user._id;       // ID del usuario autenticado
 
-        // Obtener usuario para verificar su rol
+        // Buscar el usuario en la base de datos
         const usuario = await Usuario.findById(usuarioId);
         if (!usuario) {
             console.error("Usuario no encontrado.");
             return res.redirect('/'); // Redirigir si el usuario no existe
         }
 
-        // Si el usuario es administrador, permitir el acceso automáticamente
+        // Si el usuario es administrador, permitir acceso inmediato
         if (usuario.rol === 'Administrador') {
             return next();
         }
 
-        // Buscar la asignatura y rellenar profesores y alumnos
+        // Buscar la asignatura con sus profesores y alumnos
         const asignatura = await Asignatura.findById(asignaturaId).populate('profesores alumnos');
         if (!asignatura) {
             console.error("Asignatura no encontrada.");
-            return res.redirect('/'); // Redirigir si la asignatura no existe
+            return res.redirect('/'); // Redirigir si no existe la asignatura
         }
 
-        // Verificar si el usuario es profesor o alumno de la asignatura
+        // Verificar si el usuario está en la lista de profesores o alumnos
         const esProfesor = asignatura.profesores.some(profesor => profesor._id.equals(usuarioId));
         const esAlumno = asignatura.alumnos.some(alumno => alumno._id.equals(usuarioId));
 
         if (!esProfesor && !esAlumno) {
             console.error("Acceso denegado: El usuario no está asignado a esta asignatura.");
-            return res.redirect('/'); // Redirigir si el usuario no es ni profesor ni alumno
+            return res.redirect('/'); // Redirigir si el usuario no tiene acceso
         }
 
-        // Permitir el acceso
+        // Si el usuario está en alguna lista, permitir el acceso
         next();
     } catch (error) {
         console.error("Error en la validación de acceso:", error);
-        return res.redirect('/'); // Si hay un error, redirigir
+        return res.redirect('/'); // Redirigir en caso de error
     }
 }
+
 
 //Obtener software
 // Ruta para obtener todos los softwares de una asignatura específica
