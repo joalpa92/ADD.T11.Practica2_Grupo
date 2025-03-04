@@ -6,12 +6,8 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
 const logger = require('morgan');
-<<<<<<< HEAD
 const fileUpload = require ('express-fileupload'); //Importada para subir archivos
-=======
-const fileUpload = require ('express-fileupload');//el ruter pa subir archivos
 
->>>>>>> RAMAMIGUEL
 
 
 var app = express();
@@ -38,14 +34,9 @@ app.use(cookieParser());
 
 //app.use(express.static(path.join(__dirname, 'public')));
 app.use("/public", express.static(path.resolve(__dirname + '/public')));
-<<<<<<< HEAD
 app.use("/files", express.static(path.join(__dirname, "files")));
 //app.use('/files', express.static('files'));
 
-=======
-
-app.use("/files", express.static(path.join(__dirname, "files")));//comentado lo nuevo SOY NUEVO
->>>>>>> RAMAMIGUEL
 
 app.use(session({
   secret: 'mysecretsession',

@@ -3,8 +3,11 @@ const router = express.Router();
 const Asignatura = require('../models/asignatura');
 const Usuario = require('../models/usuario'); // Modelo de usuarios
 const Estudio = require('../models/estudio'); // Modelo de estudios
-<<<<<<< HEAD
 const nodemailer = require('nodemailer'); //nuevo
+const fs = require('fs');
+const csv = require('csv-parser');
+const asignatura = require('../models/asignatura');
+const results = [];
 
 //El transporter
 let transporter = nodemailer.createTransport({
@@ -16,16 +19,7 @@ let transporter = nodemailer.createTransport({
         pass: 'xktw fenm lhrk soha'
     }
 });
-=======
-const nodemailer = require('nodemailer');
-const fs = require('fs');
-const csv = require('csv-parser');
-const asignatura = require('../models/asignatura');
-const results = [];
 
-
-
->>>>>>> RAMAMIGUEL
 
 //Obtener asignaturas
 router.get('/asignaturas', isAuthenticated, async (req, res) => {
@@ -70,19 +64,6 @@ router.post('/asignatura/add', async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
-//Ruta para eliminar una asignatura por su id
-router.get('/asignaturas/delete/:id', isAuthenticated, async (req, res, next) => {
-    if (req.user.rol === "Administrador" || req.user.rol === "Profesor") {//cotenido añadido condicional para evitar entradas indeseadas
-        const asignatura = new Asignatura();
-        let { id } = req.params;
-        console.log("Intentando eliminar asignatura con ID:", id); //Trazas para pruebas
-        await asignatura.delete(id);
-        res.redirect('/asignaturas');
-    } else {
-        res.redirect('/')
-    }
-=======
 
 //ruta para subir tareas desde CSV
 router.post('/addAsignaturasCSV', isAuthenticated, async (req,res) => {
@@ -126,14 +107,17 @@ const readCSVFile = async (fileName, user) =>{
         console.error('Error al procesar el CSV:', error)
     }
 };
-//Ruta para eliminar un usuario por su id
-router.get('/asignaturas/delete/:id', isAuthenticated, async (req, res, next) =>{
-  const asignatura = new Asignatura();
-  let {id} = req.params;
-  console.log("Intentando eliminar asignatura con ID:", id); //Trazas para pruebas
-  await asignatura.delete(id);
-  res.redirect('/asignaturas');
->>>>>>> RAMAMIGUEL
+//Ruta para eliminar una asignatura por su id
+router.get('/asignaturas/delete/:id', isAuthenticated, async (req, res, next) => {
+    if (req.user.rol === "Administrador" || req.user.rol === "Profesor") {//cotenido añadido condicional para evitar entradas indeseadas
+        const asignatura = new Asignatura();
+        let { id } = req.params;
+        console.log("Intentando eliminar asignatura con ID:", id); //Trazas para pruebas
+        await asignatura.delete(id);
+        res.redirect('/asignaturas');
+    } else {
+        res.redirect('/')
+    }
 });
 
 router.get('/asignaturas/editAsignatura/:id', isAuthenticated, async (req, res, next) => {

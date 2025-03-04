@@ -67,7 +67,7 @@ async function verificarAcceso(req, res, next) {
 
 //Obtener software
 // Ruta para obtener todos los softwares de una asignatura específica
-router.get('/software/:id',verificarAcceso ,async (req, res) => {
+router.get('/software/:id',async (req, res) => {
     //Primero pillar la asignatura
     const asignaturaId = req.params.id;// Usamos req.params.id en lugar de req.asignatura
     const asignatura = await Asignatura.findById(asignaturaId); // Buscar en la BD

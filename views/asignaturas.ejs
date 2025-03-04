@@ -128,15 +128,6 @@
                                     </li>
 
                                     <!-- Estudio -->
-<<<<<<< HEAD
-                                    <li class="list-group-item overflow-x-scroll"><!--Contenido añadido overflow-x-scroll para una barra con scroll lateral-->
-                                        <strong>Estudio:</strong> 
-                                        <% estudios.forEach(estudio => { %>
-                                            <% if (asignaturas[i].estudio.toString() === estudio._id.toString()) { %>
-                                                <span class="badge bg-warning px-2 py-1"><%= estudio.nombre %> (<%= estudio.tipo %>)</span>
-                                            <% } %>
-                                        <% }) %>
-=======
                                     <li class="list-group-item">
                                         <strong>Estudio:</strong>
                                         <% if (estudios && estudios.length > 0) { %>  <!-- ✅ Verifica si 'estudios' existe y tiene datos -->
@@ -150,7 +141,6 @@
                                         <% } else { %>
                                             <span class="text-muted">Sin estudio asignado</span>  <!-- ✅ Mensaje si no hay estudios -->
                                         <% } %>
->>>>>>> RAMAMIGUEL
                                     </li>
 
                                     <!-- Botones de acciones (Eliminar y Editar) -->
