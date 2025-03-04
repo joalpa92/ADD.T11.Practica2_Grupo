@@ -46,7 +46,12 @@
                                 <li class="nav-item active">
                                     <a class="nav-link" href="/usuarios">Usuarios</a><!--Carga el apartado usuarios (en views)-->
                                 </li>
-                                
+                            <% } %>
+
+                            <% if (user.rol=="Alumno"){ %>
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="/sugerencias">Sugerencias</a><!--Carga el apartado sugerencias (en views)-->
+                                </li>
                             <% } %>
                                     
                             <!--<li class="nav-item dropdown">

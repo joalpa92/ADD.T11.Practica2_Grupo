@@ -45,8 +45,7 @@ app.use(session({
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(fileUpload());
-
+app.use(fileUpload());//pa q lo pueda usar tol mundo
 // middlewares
 
 

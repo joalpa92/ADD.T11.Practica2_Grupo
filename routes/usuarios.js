@@ -1,7 +1,18 @@
 const router = require('express').Router();//importamos el modulo de express para definir las rutas
 const passport = require('passport');//importamos el modulo de passport para la autenticacion
 const Usuario = require('../models/usuario');//importamos el modelo de usuario
+const nodemailer = require('nodemailer'); //nodemailer
 
+//El transporter
+let transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth:{
+      user: 'app.p2.add@gmail.com',
+      pass: 'xktw fenm lhrk soha'
+  }
+});
 
 //definimos la ruta de inicio
 router.get('/', (req, res, next) => {
@@ -49,6 +60,39 @@ router.post('/signin', passport.authenticate('local-signin', {//utilizamos el pa
 //ruta para mostrar el perfil del admin
 router.get('/profile', isAuthenticated, function(req, res, next) {
   res.render('profile');//renderizamos la pagina de profile
+});
+
+//ruta para mostrar sugerencias
+router.get('/sugerencias', isAuthenticated, function(req, res, next) {
+  res.render('sugerencias'); //renderizar vista sugerencias
+});
+
+//ruta post para formulario de sugerencias
+router.post('/usuario/sugerencias', isAuthenticated, async function(req, res, next) {
+  const { nombre, email, asunto, descripcion } = req.body;
+
+  //obtener los emails de los administradores
+  const administradores = await Usuario.find({ rol: 'Administrador' }).populate('email');
+  let emails = [];
+  for (let i = 0; i < administradores.length; i++) {
+    if (administradores[i].email) {
+      emails.push(administradores[i].email); //con push añadir el email al array
+    }
+  }
+  console.log('emails de los administradores: ', emails.toString()); //para ver si lo coge bien 
+
+  let mensaje = `Sugerencia de ${nombre} (${email}): ${descripcion}`;
+  let mailOptions = {
+    from: 'app.p2.add@gmail.com',
+    to: emails.join(','),
+    subject: 'Sugerencia: '+asunto,
+    text: mensaje
+  };
+  await transporter.sendMail(mailOptions)
+    .then(result => console.log(result))
+    .catch(error => console.log(error));
+
+  return res.redirect('/sugerencias');
 });
 
 // Para añadir usuarios sin usar el signup
