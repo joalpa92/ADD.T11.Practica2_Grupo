@@ -7,14 +7,30 @@
                 <h2 class="card-header text-center">Editar Software</h2>
                 <div class="card-body">
                     <!-- Formulario para editar un software -->
-                    <form action="/software/edit/<%= software._id %>" method="post">
+                    <form action="/software/edit/<%= software._id %>" method="post" enctype="multipart/form-data">
+                        
+                        <!-- Campo Link-->
                         <div class="form-group">
                             <label for="link">Editar link:</label>
                             <input type="link" class="form-control" name="link" placeholder="link" value="<%= software.link%>">
                         </div>
+
+                        <!-- Campo descripción -->
                         <div class="form-group">
                             <label for="descripcion">Editar descripción:</label>
                             <input type="text" class="form-control" name="descripcion" placeholder="descripcion" value="<%= software.descripcion%>">
+                        </div>
+                        
+                        <!-- Campo para subir archivo al software -->
+                        <div class="form-control-file mt-3"> <!--m añade margen en Bootstrap <(mt = margin top)-->
+                            <label for="archivo" margin="5">Upload File: </label>
+                            <input id="archivo" class="form-control-file" type="file" name="archivo"> <!--No se le puede establecer la etiqueta value-->
+                            <% if (software.archivo){%>
+                            <p>Archivo actual: <a href="<%=/files/+software.archivo %>" download="<%= software.archivo %>"> <!--Para que tome la ruta como absoluta, hayt que meter en el embebido toda la ruta, y no sólo 'software.archivo'-->
+                                <%= software.archivo %>
+                            </a>
+                        </p>
+                       <% }%>
                         </div>
                         <br>
                         <button type="submit" class="btn btn-primary">Actualizar</button>

@@ -4,7 +4,9 @@ const router = express.Router();
 const Asignatura = require('../models/asignatura');
 const Software = require('../models/software');
 const fs = require('fs') //fileSystem
-const result = [];
+const path = require('path'); // Necesario para la comprobación del archivo en el get /software/:id
+const { error } = require('console');
+const e = require('express');
 
 //Obtener software
 // Ruta para obtener todos los softwares de una asignatura específica
@@ -12,17 +14,29 @@ router.get('/software/:id', async (req, res) => {
     //Primero pillar la asignatura
     const asignaturaId = req.params.id;// Usamos req.params.id en lugar de req.asignatura
     const asignatura = await Asignatura.findById(asignaturaId); // Buscar en la BD
-    console.log("Esta es la asignatura que encuentra: "+asignatura.id+" "+asignatura.nombre) //Traza 1
+    //console.log("Esta es la asignatura que encuentra: "+asignatura.id+" "+asignatura.nombre) //Traza 1
     const software = new Software();
-    const softwares = await software.findAllFromAsignatura(asignatura); 
-    console.log("Este es el software de la asignatura: " + softwares); //Traza 2
+    const softwares = await software.findAllFromAsignatura(asignatura);
+
+    // Verificar si el archivo realmente existe en la carpeta "files"
+    softwares.forEach(software => {
+        // Validar que software.archivo no sea undefined o vacío
+        if (software.archivo && typeof software.archivo === 'string' && software.archivo.trim() !== '') {
+            const filePath = path.join(__dirname, '../files', software.archivo);
+            software.existe = fs.existsSync(filePath); // en jvScript los objetos son dinámicos, por eso le podemos agrgar la propiedad 'existe' sin estar definida en el modelo
+        } else {
+            software.existe = false; // Si no hay archivo, marcar como no existente
+        }
+    });
+
+    //console.log("Este es el software de la asignatura: " + softwares); //Traza 2
     res.render('software', { softwares, asignatura }); // Pasamos 'asignaturas' al renderizado para consistencia
 });
 
 // Para añadir software sin usar el signup
 router.post('/software/add', async (req, res) => {
-    try {
-        //let asignatura = req.params.id;//No se lo estamos pasando por ruta, sino por el body
+    try { 
+        //let asignatura = req.params.id; No se lo estamos pasando por ruta, sino por el body
         const { link, descripcion,asignaturaId,archivo} = req.body;
 
         // Crear nuevo software
@@ -33,12 +47,14 @@ router.post('/software/add', async (req, res) => {
             archivo 
         });
 
-        console.log ("Esto obtiene en req.files",req.files)  //Traza
-
+        //Guardar archivo en software
         if (req.files && req.files.archivo) { 
             let EDFile = req.files.archivo;
-              newSoftware.archivo = EDFile.name;
-              await  EDFile.mv(`./files/${EDFile.name}`);
+
+            //Vamos a darle un nombre único
+            let nombreArchivo = `${Date.now()}_${EDFile.name}`;
+              newSoftware.archivo = nombreArchivo;
+              await  EDFile.mv(`./files/${nombreArchivo}`);
         }
 
         // Guardar software
@@ -66,6 +82,13 @@ router.get('/software/delete/:id', async (req, res, next) => {
         }
 
         let asignaturaId = software.asignatura; // Obtener el ID de la asignatura antes de eliminar
+        
+        if (software.archivo){
+            let nombreArchivo= software.archivo;
+            // Eliminar el archivo asociado al software
+            const filePath = path.join(__dirname, '../files', nombreArchivo); // Ruta completa del archivo
+            fs.unlink(filePath,error); //necesita una callback como segundo argumento por si hay un error
+        }
 
         // Eliminar el software
         await Software.findByIdAndDelete(id);
@@ -100,11 +123,28 @@ router.post('/software/edit/:id', async function (req, res, next) {
         
         // Obtener el ID de la asignatura del software antes de la actualización
         const asignaturaId = software.asignatura;
-
+        let nombreArchivo = ""; //Lo definimos aquí, ya que luego lo pasamos en el updateOne y nos va a hacer falta aunque no se actualice
         console.log("Intentando editar software con id ", id);
 
-        // Actualizar el software con los datos proporcionados en req.body
-        await Software.updateOne({ _id: id }, req.body);
+        //Guardar archivo en software
+        if (req.files && req.files.archivo) { 
+            let EDFile = req.files.archivo;
+
+            //Vamos a darle un nombre único
+            nombreArchivo = `${Date.now()}_${EDFile.name}`;
+              software.archivo = nombreArchivo;
+              await  EDFile.mv(`./files/${nombreArchivo}`);
+
+              // Actualizar el software con los datos proporcionados en req.body
+        await Software.updateOne(
+            { _id: id },
+             {
+                ...req.body, //Con los tres puntitos podemos modificar elementos de ese req.body, en este caso el campo 'archivo'
+                archivo: nombreArchivo //Le agregamos manualmente
+            });
+        }else{
+            await Software.updateOne({_id:id},{...req.body}); 
+        }
 
         // Redirigir a la vista de la asignatura correspondiente
         res.redirect('/software/' + asignaturaId);
@@ -113,21 +153,5 @@ router.post('/software/edit/:id', async function (req, res, next) {
         next(error);
     }
 });
-
-//Añadir archivos al software (In progress) --> Probablemente este no haga falta
-router.post('/software/add/file',async (req, res, next) => {
-    const task = new Task(req.body); //aquí hay que requerir el archivo sólo
-    task.usuario=req.user._id;
-    if (req.files && req.files.archivo) {
-      let EDFile = req.files.archivo;
-        task.archivo = EDFile.name;
-        await  EDFile.mv(`./files/${EDFile.name}`);
-  }
-    await task.insert()
-        .then(result => console.log(result))
-        .catch(error => console.log(error));
-        res.redirect('/tasks');
-  });
-
 
 module.exports = router;

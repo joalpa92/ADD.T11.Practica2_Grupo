@@ -18,7 +18,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/usuarios');
 var asignaturasRouter = require ('./routes/asignatura');
 var softwareRouter = require ('./routes/software');
-  // view engine setup
+  
+// view engine setup
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

@@ -3,7 +3,6 @@
 <div class="container">
     <!-- Título principal con el nombre de la asignatura -->
     <h2 class="text-center my-4">Asignatura: <%= asignatura.nombre %></h2>
-
     <div class="row">
         <% if (user.rol === "Administrador" || user.rol === "Profesor") { %>
             <!-- Sección izquierda: Formulario para añadir software -->
@@ -43,7 +42,6 @@
             </div>
         <% } %>
 
-        <!-- Sección derecha: Listado de software -->
         <!-- Sección derecha: Listado de software en tarjetas -->
         <div class="col-md-7">
             <h2 class="text-center">Listado de Softwares</h2>
@@ -67,8 +65,8 @@
                                     </li>
                                     <li class="list-group-item">
                                         <strong>Archivo: </strong>
-                                        <% if (softwares[i].archivo) { %>
-                                            <a href="../files/<%= softwares[i].archivo %>" download="<%= softwares[i].archivo %>"> <!--Añado el doble punto para salirme a la raiz del proyecto-->
+                                        <% if (softwares[i].archivo && softwares[i].existe) { %>
+                                            <a href="<%=/files/+softwares[i].archivo %>" download="<%= softwares[i].archivo %>"> 
                                               <%= softwares[i].archivo %>
                                             </a>
                                           <% } else { %>
