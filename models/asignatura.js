@@ -9,15 +9,18 @@ const asignaturaSchema = new Schema ({
     curso: {type: String, required: true},
 
     //alumnos y profesores son listas. Referencian a usuario y almacenan su _Id
-    alumnos: 
+    alumnos:
     [
-        {type: mongoose.Schema.Types.ObjectId, ref:'usuario'}
+        {type: mongoose.Schema.Types.ObjectId, ref:'usuario'}//hace referencia a la colección usuario
     ],
     software:
     [
-      {type: mongoose.Schema.Types.ObjectId, ref:'software'}
+      {type: mongoose.Schema.Types.ObjectId, ref:'software'}//hace referencia a la colección software
     ],
-    profesores: 
+    archivo:{
+      type: String
+    },
+    profesores:
     [
         {type: mongoose.Schema.Types.ObjectId, ref:'usuario'}
     ],
@@ -79,14 +82,14 @@ asignaturaSchema.methods.findAllFromUsuario= async function (usuario) {
     return await this.find({
         nombre: new RegExp(search, 'i'), // Búsqueda insensible a mayúsculas
         $or: [{ alumnos: usuario }, { profesores: usuario}] // Buscar en alumnos o profesores
-    })    
+    })
     .then(result => {return result})
     .catch(error => console.log(error));
   };
   
   module.exports = mongoose.model('asignatura', asignaturaSchema);
 
-    /*NOTAS: 
+    /*NOTAS:
 
         - new RegExp(entrada datos,'i')--> Sirve para crear expresiones regulares en Javascript
     */

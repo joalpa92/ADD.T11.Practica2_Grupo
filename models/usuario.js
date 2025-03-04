@@ -8,6 +8,7 @@ const usuarioSchema = new Schema({
     email: {type: String, required: true},
     password: {type: String, required: true},
     apellido: {type: String, required: false},
+    archivo:{ type: String},
     rol: {
         type: String, required: true
     }

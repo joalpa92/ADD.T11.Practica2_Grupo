@@ -36,8 +36,17 @@
                                   <option value="Alumno">Alumno</option>
                               </select>
                           </div>
-                          <button type="submit" class="btn btn-primary mt-3">Añadir</button>
+                          <button type="submit" class="btn btn-success  mt-3">Añadir</button>
                       </form>
+                        <div class="mb-3">
+                            <form action="/addUsuariosCSV" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="csvFile">Selecciona Archivo CSV</label>
+                                    <input type="file" name="archivo" id="csvFile" class="form-control-file" accept=".csv" required>
+                                </div>
+                                <button class="btn btn-primary btn block mt-3" type="submit">Cargar CSV</button>
+                            </form>
+                        </div>
                   </div>
               </div>
           </div>

@@ -55,11 +55,23 @@
                                 <% }) %>
                             </select>
                         </div>
+                       
 
                         <button type="submit" class="btn btn-success w-100"> <!-- Botón de envío en verde -->
                             <i class="fas fa-plus-circle"></i> Añadir Asignatura
                         </button>
                     </form>
+                    <!--Para añadir por CSV-->
+                    <div class="mb-3">
+                        <form action="/addAsignaturasCSV" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="csvFile">Selecciona Archivo CSV</label>
+                                <input type="file" name="archivo" id="csvFile" class="form-control-file" accept=".csv" required>
+                            </div>
+                            <button class="btn btn-primary btn block mt-3" type="submit">Cargar CSV</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -116,6 +128,7 @@
                                     </li>
 
                                     <!-- Estudio -->
+<<<<<<< HEAD
                                     <li class="list-group-item overflow-x-scroll"><!--Contenido añadido overflow-x-scroll para una barra con scroll lateral-->
                                         <strong>Estudio:</strong> 
                                         <% estudios.forEach(estudio => { %>
@@ -123,6 +136,21 @@
                                                 <span class="badge bg-warning px-2 py-1"><%= estudio.nombre %> (<%= estudio.tipo %>)</span>
                                             <% } %>
                                         <% }) %>
+=======
+                                    <li class="list-group-item">
+                                        <strong>Estudio:</strong>
+                                        <% if (estudios && estudios.length > 0) { %>  <!-- ✅ Verifica si 'estudios' existe y tiene datos -->
+                                            <% estudios.forEach(estudio => { %>
+                                                <% if (asignaturas[i].estudio && asignaturas[i].estudio.toString() === estudio._id.toString()) { %>
+                                                    <span class="badge bg-warning px-2 py-1">
+                                                        <%= estudio.nombre %> (<%= estudio.tipo %>)
+                                                    </span>
+                                                <% } %>
+                                            <% }) %>
+                                        <% } else { %>
+                                            <span class="text-muted">Sin estudio asignado</span>  <!-- ✅ Mensaje si no hay estudios -->
+                                        <% } %>
+>>>>>>> RAMAMIGUEL
                                     </li>
 
                                     <!-- Botones de acciones (Eliminar y Editar) -->

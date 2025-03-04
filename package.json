@@ -9,6 +9,10 @@
     "bcrypt-nodejs": "^0.0.3",
     "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.4",
+<<<<<<< HEAD
+=======
+    "csv": "^6.3.11",
+>>>>>>> RAMAMIGUEL
     "csv-parser": "^3.2.0",
     "debug": "~2.6.9",
     "ejs": "^3.1.10",
