@@ -2,6 +2,7 @@ const router = require('express').Router();//importamos el modulo de express par
 const passport = require('passport');//importamos el modulo de passport para la autenticacion
 const Usuario = require('../models/usuario');//importamos el modelo de usuario
 const nodemailer = require('nodemailer'); //nodemailer
+const { render } = require('../app');
 
 //El transporter
 let transporter = nodemailer.createTransport({
@@ -64,7 +65,11 @@ router.get('/profile', isAuthenticated, function(req, res, next) {
 
 //ruta para mostrar sugerencias
 router.get('/sugerencias', isAuthenticated, function(req, res, next) {
-  res.render('sugerencias'); //renderizar vista sugerencias
+  if (req.user.rol=="Alumno"){
+    res.render('sugerencias'); //renderizar vista sugerencias
+  }else{
+    res.redirect('/')
+  }
 });
 
 //ruta post para formulario de sugerencias

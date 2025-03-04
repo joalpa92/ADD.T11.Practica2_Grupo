@@ -3,7 +3,6 @@ const router = express.Router();
 const Asignatura = require('../models/asignatura');
 const Software = require('../models/software');
 const nodemailer = require('nodemailer'); //nodemailer
-const fs = require('fs'); //fileSystem
 const csv = require('csv-parser'); //encargado de parsear
 const fs = require('fs') //fileSystem
 const path = require('path'); // Necesario para la comprobación del archivo en el get /software/:id
