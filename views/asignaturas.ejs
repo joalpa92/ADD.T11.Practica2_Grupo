@@ -92,7 +92,7 @@
                                     </li>
 
                                     <!-- Profesores -->
-                                    <li class="list-group-item">
+                                    <li class="list-group-item overflow-x-scroll"><!--Contenido añadido overflow-x-scroll para una barra con scroll lateral-->
                                         <strong>Profesores:</strong> 
                                         <div class="d-flex flex-wrap gap-1">
                                             <% profesores.forEach(profesor => { %>
@@ -104,7 +104,7 @@
                                     </li>
 
                                     <!-- Alumnos -->
-                                    <li class="list-group-item">
+                                    <li class="list-group-item overflow-x-scroll"><!--Contenido añadido overflow-x-scroll para una barra con scroll lateral-->
                                         <strong>Alumnos:</strong> 
                                         <div class="d-flex flex-wrap gap-1">
                                             <% alumnos.forEach(alumno => { %>
@@ -116,7 +116,7 @@
                                     </li>
 
                                     <!-- Estudio -->
-                                    <li class="list-group-item">
+                                    <li class="list-group-item overflow-x-scroll"><!--Contenido añadido overflow-x-scroll para una barra con scroll lateral-->
                                         <strong>Estudio:</strong> 
                                         <% estudios.forEach(estudio => { %>
                                             <% if (asignaturas[i].estudio.toString() === estudio._id.toString()) { %>
