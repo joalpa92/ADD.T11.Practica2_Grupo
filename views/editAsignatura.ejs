@@ -19,9 +19,8 @@
                 <label for="alumnos">Alumnos:</label>
                 <select class="form-control" id="alumnos" name="alumnos" multiple>
                   <% alumnos.forEach(alumno=> { %>
-                    <option value="<%= alumno._id %>">
-                      <%= alumno.nombre %>
-                        <%= alumno.apellido %>
+                    <option value="<%= alumno._id %>" <%= asignatura.alumnos.includes(alumno._id.toString()) ? "selected" : "" %>>
+                      <%= alumno.nombre %> <%= alumno.apellido %>
                     </option>
                     <% }) %>
                 </select>
@@ -32,9 +31,8 @@
                 <label for="profesores">Profesores que la imparten:</label>
                 <select class="form-control" id="profesores" name="profesores" multiple>
                   <% profesores.forEach(profesor=> { %>
-                    <option value="<%= profesor._id %>">
-                      <%= profesor.nombre %>
-                        <%= profesor.apellido %>
+                    <option value="<%= profesor._id %>" <%= asignatura.profesores.includes(profesor._id.toString()) ? "selected" : "" %>>
+                      <%= profesor.nombre %> <%= profesor.apellido %>
                     </option>
                     <% }) %>
                 </select>

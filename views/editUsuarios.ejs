@@ -23,10 +23,10 @@
                     <input type="password" class="form-control"  name="password" placeholder="Contraseña" value="<%= usuario.password%>">
                 </div>
                 <label for="rol">Selecciona un rol:</label>
-                    <select name="rol" value="<%= usuario.rol%>">
-                        <option value="Administrador">Administrador</option>
-                        <option value="Profesor">Profesor</option>
-                        <option value="Alumno">Alumno</option>
+                    <select name="rol">
+                        <option value="Administrador" <%= usuario.rol==="Aministrador"? "selected": "" %>>Administrador</option>
+                        <option value="Profesor"<%= usuario.rol==="Profesor"? "selected": "" %>>Profesor</option>
+                        <option value="Alumno"<%= usuario.rol==="Alumno"? "selected": "" %>>Alumno</option>
                     </select>
                 <br><br>
                 <button type="submit" class="btn btn-primary">Actualizar</button>

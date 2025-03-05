@@ -109,7 +109,7 @@ const readCSVFile = async (fileName, user) =>{
 };
 //Ruta para eliminar una asignatura por su id
 router.get('/asignaturas/delete/:id', isAuthenticated, async (req, res, next) => {
-    if (req.user.rol === "Administrador" || req.user.rol === "Profesor") {//cotenido añadido condicional para evitar entradas indeseadas
+    if (req.user.rol === "Administrador" || req.user.rol === "Profesor") { //cotenido añadido condicional para evitar entradas indeseadas
         const asignatura = new Asignatura();
         let { id } = req.params;
         console.log("Intentando eliminar asignatura con ID:", id); //Trazas para pruebas
@@ -121,11 +121,11 @@ router.get('/asignaturas/delete/:id', isAuthenticated, async (req, res, next) =>
 });
 
 router.get('/asignaturas/editAsignatura/:id', isAuthenticated, async (req, res, next) => {
-    if (req.user.rol === "Administrador" || req.user.rol === "Profesor") {//cotenido añadido condicional para evitar entradas indeseadas
+    if (req.user.rol === "Administrador" || req.user.rol === "Profesor") { //cotenido añadido condicional para evitar entradas indeseadas
         var asignatura = new Asignatura();
         asignatura = await asignatura.findById(req.params.id);
         const usuarios = await Usuario.find(); // Obtiene todos los usuarios
-        console.log("Jorge, esto funciona")
+        
         // Filtrar profesores y alumnos
         const profesores = usuarios.filter(user => user.rol === 'Profesor');
         const alumnos = usuarios.filter(user => user.rol === 'Alumno');
@@ -142,7 +142,18 @@ router.post('/asignaturas/editAsignatura/:id', isAuthenticated, async (req, res,
     if (req.user.rol === "Administrador" || req.user.rol === "Profesor") {//cotenido añadido condicional para evitar entradas indeseadas
         const asignatura = new Asignatura();
         const { id } = req.params;
-        await asignatura.update({ _id: id }, req.body);
+        const { nombre, curso, alumnos, profesores, estudio } = req.body;
+
+        // Crear la asignatura con los datos del formulario
+        const datosActualizados = {
+            nombre,
+            curso,
+            alumnos: alumnos? alumnos:[] , // Si alumnos no está definifo manda una array vacía
+            profesores: profesores? profesores:[], //lo mismo con profes
+            estudio
+        };
+
+        await asignatura.update({ _id: id }, datosActualizados);
     
     //Cada vez que haya un cambio en una asignatura, los alumnos de la asignatura reciben una notificación 
     const asignaturaActualizada = await Asignatura.findById(id).populate('alumnos');
